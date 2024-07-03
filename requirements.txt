@@ -1,0 +1,5 @@
+certifi==2024.6.2
+numpy @ file:///private/tmp/numpy-20240206-5948-gu6j5s/numpy-1.26.4
+pillow==10.3.0
+pybind11==2.13.1
+wheel @ file:///opt/homebrew/Cellar/python%403.12/3.12.4/libexec/wheel-0.43.0-py3-none-any.whl#sha256=ff23205a590f2b902a2a21151019e96b93ab4a1409d7c9748b6bd210f4c0f44d
