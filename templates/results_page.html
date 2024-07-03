@@ -4,42 +4,68 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Results Page</title>
+    <!-- Include Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!-- Include Alpine.js -->
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.min.js" defer></script>
+    <style>
+        /* Additional styles for animation */
+        .card-enter {
+            opacity: 0;
+            transform: translateY(1rem);
+        }
+        .card-enter-active {
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
 </head>
-<body>
-    <h1>Results Page</h1>
-
-    {% for result in results %}
-    <div>
-        <h2>{{ result.headline }}</h2>
-        <p><strong>Overall Sentiment:</strong> {{ result.overall_sentiment }}</p>
-
-        <h3>Probability Distributions</h3>
-
-        <ul>
-            {% for chunk_prob in result.chunk_probabilities %}
-            <li>
-                <p><strong>Sentiment:</strong> {{ sentiment_labels[result.chunk_sentiments[loop.index0]] }}</p>
-                <p><strong>Probabilities:</strong></p>
-                <ul>
-                    {% for prob in chunk_prob %}
-                    <li>{{ prob }}</li>
-                    {% endfor %}
-                </ul>
-            </li>
-            {% endfor %}
-        </ul>
-
-        <p><strong>Overall Probability:</strong></p>
-        <ul>
-            {% for prob in result.mean_probabilities %}
-            <li>{{ prob }}</li>
-            {% endfor %}
-        </ul>
-
-        <p><strong>Overall Sentiment:</strong> {{ result.overall_sentiment }}</p> <!-- Moved this line here -->
-
-        <hr>
+<body class="bg-gray-100">
+    <div class="container mx-auto my-8">
+        <a href="/" class="inline-block bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition duration-300 transform hover:-translate-y-1 hover:shadow-xl">&larr; Navigate to Home</a>
     </div>
-    {% endfor %}
+
+    <h1 class="text-3xl font-bold text-center my-8">Results Page</h1>
+
+    <div id="results" class="container mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        {% for result in results %}
+        <div class="max-w-sm rounded-lg overflow-hidden shadow-lg transition duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-xl
+            {% if result.overall_sentiment == 'negative' %}
+                bg-red-100
+            {% elif result.overall_sentiment == 'neutral' %}
+                bg-gray-100
+            {% else %}
+                bg-green-100
+            {% endif %}
+        " x-data="{ isVisible: false }" x-transition:enter="card-enter" x-transition:enter-start="opacity-0 transform translateY(1rem)" x-transition:enter-end="opacity-100 transform translateY(0)" x-init="setTimeout(() => { isVisible = true }, 100 * {{ loop.index0 }})">
+            <img src="{{ result.image_url }}" alt="Article Image" class="w-full h-64 object-cover object-center opacity-90 hover:opacity-100">
+            <div class="p-4">
+                <h2 class="text-xl font-semibold mb-2"><a href="{{ result.article_url }}" target="_blank">{{ result.headline }}</a></h2>
+                <p class="text-gray-700"><strong>Overall Sentiment:</strong> 
+                    {% if result.overall_sentiment == 'negative' %}
+                        <span class="text-red-600">{{ result.overall_sentiment }}</span>
+                    {% elif result.overall_sentiment == 'neutral' %}
+                        <span class="text-gray-600">{{ result.overall_sentiment }}</span>
+                    {% else %}
+                        <span class="text-green-600">{{ result.overall_sentiment }}</span>
+                    {% endif %}
+                </p>
+            </div>
+            <div class="p-4">
+                <p class="text-gray-700">
+                    {{ result.summary }}
+                </p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <script>
+        // Alpine.js initialization
+        document.addEventListener('alpine:init', () => {
+            Alpine.init();
+        });
+    </script>
 </body>
 </html>

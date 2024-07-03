@@ -18,7 +18,7 @@ exclude_timezones = ['UTC', 'GMT', 'BST', 'PDT', 'EDT', 'CET', 'AEDT', 'IST', 'J
 # Parameters for the API request
 params = {
     'api-key': api_key,
-    'show-fields': 'body',  # Request to show full article body
+    'show-fields': 'body,thumbnail',  # Request to show full article body and thumbnail
     'order-by': 'newest',  # Order by newest articles
     'production-office': 'aus',  # Filter by Australian edition
     'page-size': 20  # Number of results per page
@@ -40,6 +40,8 @@ def fetch_articles():
             for article in data.get('response', {}).get('results', []):
                 headline = article.get('webTitle', '')
                 body = article.get('fields', {}).get('body', '')
+                image_url = article.get('fields', {}).get('thumbnail', '')  # Fetch thumbnail URL
+                article_url = article.get('webUrl', '')  # Fetch article URL
 
                 # Exclude articles with 'GMT' in the body text or timezones in exclude_timezones
                 exclude_article = any(tz in body for tz in exclude_timezones) or 'GMT' in body
@@ -52,11 +54,16 @@ def fetch_articles():
                     # Create a dictionary for each article
                     article_dict = {
                         'headline': headline,
-                        'full_text': full_text
+                        'full_text': full_text,
+                        'image_url': image_url,  # Include image URL in the dictionary
+                        'article_url': article_url  # Include article URL in the dictionary
                     }
 
                     # Append dictionary to articles list
                     articles_list.append(article_dict)
+
+                    # Print image URL for verification
+                    print(f"Fetched image URL: {image_url}")
 
         else:
             print(f"Request failed with status code {response.status_code}")

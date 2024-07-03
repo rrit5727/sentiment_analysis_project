@@ -45,14 +45,15 @@ def get_input_ids_and_attention_mask_chunk(tokens, chunksize=510):
 
     return input_id_chunks, attention_mask_chunks
 
-# Function to perform sentiment analysis
 def analyze_sentiment(articles_list):
     results = []
 
     for article in articles_list:
-        # Extract text and headline
+        # Extract text, headline, and image_url
         text = article['full_text']
         headline = article['headline']
+        image_url = article['image_url']  # Ensure image_url is fetched from fetch_articles
+        article_url = article['article_url']
 
         # Tokenize the text
         tokens = tokenizer.encode_plus(text, add_special_tokens=False, return_tensors='pt')
@@ -101,23 +102,16 @@ def analyze_sentiment(articles_list):
         # Overall predicted sentiment
         overall_sentiment_label = sentiment_labels[predicted_sentiment]
 
-        # Extract entities from the text
-        doc = nlp(text)
-        entities = [ent.text for ent in doc.ents if ent.label_ in ['ORG', 'PERSON', 'GPE']]
-
-        # Count occurrences of each entity
-        entity_counts = Counter(entities)
-        most_common_entities = entity_counts.most_common(2)
-
-        # Create results dictionary
+        # Create results dictionary including image_url
         result_dict = {
             'headline': headline,
             'overall_sentiment': overall_sentiment_label,
+            'image_url': image_url,  # Include image URL in the dictionary
+            'article_url': article_url,
             'chunk_probabilities': chunk_probabilities,
             'chunk_texts': chunk_texts,
             'chunk_sentiments': chunk_sentiments,
             'mean_probabilities': mean_probabilities.tolist(),  # Convert tensor to list for JSON serialization
-            'most_common_entities': most_common_entities
         }
 
         # Append results dictionary to results list
