@@ -18,7 +18,6 @@
         <ul>
             {% for chunk_prob in result.chunk_probabilities %}
             <li>
-                <p><strong>Chunk Text:</strong> {{ result.chunk_texts[loop.index0] }}</p>
                 <p><strong>Sentiment:</strong> {{ sentiment_labels[result.chunk_sentiments[loop.index0]] }}</p>
                 <p><strong>Probabilities:</strong></p>
                 <ul>
@@ -36,6 +35,8 @@
             <li>{{ prob }}</li>
             {% endfor %}
         </ul>
+
+        <p><strong>Overall Sentiment:</strong> {{ result.overall_sentiment }}</p> <!-- Moved this line here -->
 
         <hr>
     </div>
