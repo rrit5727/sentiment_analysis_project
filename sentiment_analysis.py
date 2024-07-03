@@ -82,7 +82,7 @@ def analyze_sentiment(articles_list):
             chunk_sentiments.append(predicted_sentiment)
             chunk_probabilities.append(probabilities.tolist())
 
-            # Extract chunk text (for demonstration purposes, not exact text)
+            # Extract chunk text
             chunk_text = tokenizer.decode(input_ids_chunk[0], skip_special_tokens=True)
             chunk_texts.append(chunk_text)
 
@@ -113,10 +113,11 @@ def analyze_sentiment(articles_list):
         result_dict = {
             'headline': headline,
             'overall_sentiment': overall_sentiment_label,
-            'most_common_entities': most_common_entities,
-            # 'num_chunks': len(input_id_chunks),  # Add number of chunks
-            # 'chunk_probabilities': chunk_probabilities,
-            # 'chunk_texts': chunk_texts  # Add chunk texts
+            'chunk_probabilities': chunk_probabilities,
+            'chunk_texts': chunk_texts,
+            'chunk_sentiments': chunk_sentiments,
+            'mean_probabilities': mean_probabilities.tolist(),  # Convert tensor to list for JSON serialization
+            'most_common_entities': most_common_entities
         }
 
         # Append results dictionary to results list
