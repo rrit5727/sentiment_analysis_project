@@ -1,6 +1,7 @@
 import os
 import requests
 from dotenv import load_dotenv
+from bs4 import BeautifulSoup
 
 # Load environment variables from .env file
 load_dotenv()
@@ -65,8 +66,3 @@ def fetch_articles():
         print(f"Request error: {e}")
 
     return articles_list
-
-# If this file is executed directly, fetch articles and print the first article
-if __name__ == "__main__":
-    articles = fetch_articles()
-    print(articles[0])  # For demonstration purposes, print the first article

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentiment Analysis Results</title>
+    <link href="{{ url_for('static', filename='css/tailwind.css') }}" rel="stylesheet">
+</head>
+
+<body class="bg-gray-100">
+    <div class="max-w-4xl mx-auto p-8">
+        <h1 class="text-3xl font-bold mb-4">Sentiment Analysis Results</h1>
+        <ul>
+            {% for result in results %}
+            <li class="mb-4">
+                <h2 class="text-xl font-semibold">{{ result.headline }}</h2>
+                <p class="text-lg">Overall Sentiment: {{ result.overall_sentiment }}</p>
+                <p class="text-gray-600">Most Common Entities: {{ result.most_common_entities }}</p>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+
+</html>
